@@ -4,6 +4,7 @@ import (
 	"github/murilorscampos/desafio-fabricio/database"
 	"github/murilorscampos/desafio-fabricio/models"
 	"github/murilorscampos/desafio-fabricio/utils"
+	"log"
 	"net/http"
 	"strings"
 
@@ -160,6 +161,8 @@ func ListaContatos(c *gin.Context) {
 // ConsultaContatosNome realiza a consulta dos contatos com base em um nome informado
 func ConsultaContatosNome(c *gin.Context) {
 
+	var recomendacao string
+
 	contatos := []models.Contato{}
 
 	nome := c.Params.ByName("nome")
@@ -184,6 +187,13 @@ func ConsultaContatosNome(c *gin.Context) {
 
 		return
 
+	}
+
+	for _, contato := range contatos {
+
+		recomendacao = utils.RealizaRecomendacao(contato.Cidade, contato.UF)
+
+		log.Println("recomendacao:", recomendacao)
 	}
 
 	c.JSON(http.StatusOK, contatos)
