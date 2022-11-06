@@ -4,7 +4,6 @@ import (
 	"github/murilorscampos/desafio-fabricio/database"
 	"github/murilorscampos/desafio-fabricio/models"
 	"github/murilorscampos/desafio-fabricio/utils"
-	"log"
 	"net/http"
 	"strings"
 
@@ -22,7 +21,7 @@ func InsereContato(c *gin.Context) {
 	if result := c.ShouldBindJSON(&contato); result != nil {
 
 		c.JSON(http.StatusBadRequest, gin.H{
-			"data": result.Error(),
+			"data": result.Error,
 		})
 
 		return
@@ -32,7 +31,7 @@ func InsereContato(c *gin.Context) {
 	if result := models.ValidaDadosContato(&contato); result != nil {
 
 		c.JSON(http.StatusBadRequest, gin.H{
-			"data": result.Error(),
+			"data": result.Error,
 		})
 
 		return
@@ -75,7 +74,7 @@ func AlteraContato(c *gin.Context) {
 	if result := c.ShouldBindJSON(&contato); result != nil {
 
 		c.JSON(http.StatusBadRequest, gin.H{
-			"data": result.Error(),
+			"data": result.Error,
 		})
 
 		return
@@ -85,7 +84,7 @@ func AlteraContato(c *gin.Context) {
 	if result := models.ValidaDadosContato(&contato); result != nil {
 
 		c.JSON(http.StatusBadRequest, gin.H{
-			"data": result.Error(),
+			"data": result.Error,
 		})
 
 		return
@@ -154,14 +153,22 @@ func ListaContatos(c *gin.Context) {
 
 	}
 
-	c.JSON(http.StatusOK, contatos)
+	contatosComRecomendacao, err := utils.RealizaRecomendacao(contatos)
+
+	if err != nil {
+
+		c.JSON(http.StatusBadRequest, gin.H{
+			"data": err.Error,
+		})
+
+	}
+
+	c.JSON(http.StatusOK, contatosComRecomendacao)
 
 }
 
 // ConsultaContatosNome realiza a consulta dos contatos com base em um nome informado
 func ConsultaContatosNome(c *gin.Context) {
-
-	var recomendacao string
 
 	contatos := []models.Contato{}
 
@@ -189,14 +196,17 @@ func ConsultaContatosNome(c *gin.Context) {
 
 	}
 
-	for _, contato := range contatos {
+	contatosComRecomendacao, err := utils.RealizaRecomendacao(contatos)
 
-		recomendacao = utils.RealizaRecomendacao(contato.Cidade, contato.UF)
+	if err != nil {
 
-		log.Println("recomendacao:", recomendacao)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"data": err.Error,
+		})
+
 	}
 
-	c.JSON(http.StatusOK, contatos)
+	c.JSON(http.StatusOK, contatosComRecomendacao)
 
 }
 
@@ -225,7 +235,17 @@ func ConsultaContatosEmail(c *gin.Context) {
 
 	}
 
-	c.JSON(http.StatusOK, contatos)
+	contatosComRecomendacao, err := utils.RealizaRecomendacao(contatos)
+
+	if err != nil {
+
+		c.JSON(http.StatusBadRequest, gin.H{
+			"data": err.Error,
+		})
+
+	}
+
+	c.JSON(http.StatusOK, contatosComRecomendacao)
 
 }
 
@@ -258,7 +278,17 @@ func ConsultaContatosCidade(c *gin.Context) {
 
 	}
 
-	c.JSON(http.StatusOK, contatos)
+	contatosComRecomendacao, err := utils.RealizaRecomendacao(contatos)
+
+	if err != nil {
+
+		c.JSON(http.StatusBadRequest, gin.H{
+			"data": err.Error,
+		})
+
+	}
+
+	c.JSON(http.StatusOK, contatosComRecomendacao)
 
 }
 
@@ -287,6 +317,16 @@ func ConsultaContatosUF(c *gin.Context) {
 
 	}
 
-	c.JSON(http.StatusOK, contatos)
+	contatosComRecomendacao, err := utils.RealizaRecomendacao(contatos)
+
+	if err != nil {
+
+		c.JSON(http.StatusBadRequest, gin.H{
+			"data": err.Error,
+		})
+
+	}
+
+	c.JSON(http.StatusOK, contatosComRecomendacao)
 
 }

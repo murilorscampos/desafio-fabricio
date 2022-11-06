@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// ConsultaContatosTelefone realiza a consulta dos contatos a partir de um número de teleefone informado
 func ConsultaContatosTelefone(c *gin.Context) {
 
 	telefones := []models.Telefone{}

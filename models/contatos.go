@@ -6,15 +6,16 @@ import (
 )
 
 type Contato struct {
-	gorm.Model `json:"-"`
-	ID         int        `json:"id" gorm:"primaryKey,autoIncrement"`
-	Nome       string     `json:"nome" validate:"nonzero"`
-	Logradouro string     `json:"logradouro"`
-	Cidade     string     `json:"cidade"`
-	Bairro     string     `json:"bairro"`
-	UF         string     `json:"uf"`
-	Email      string     `json:"mail"`
-	Telefones  []Telefone `json:"telefones" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	gorm.Model   `json:"-"`
+	ID           int        `json:"id" gorm:"primaryKey,autoIncrement"`
+	Nome         string     `json:"nome" validate:"nonzero"`
+	Logradouro   string     `json:"logradouro"`
+	Cidade       string     `json:"cidade"`
+	Bairro       string     `json:"bairro"`
+	UF           string     `json:"uf"`
+	Email        string     `json:"mail"`
+	Telefones    []Telefone `json:"telefones" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Recomendacao string     `json:"recomendacao" gorm:"-"`
 }
 
 func ValidaDadosContato(Contato *Contato) error {
