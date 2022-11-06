@@ -16,7 +16,6 @@ var (
 func ConectaBD() {
 
 	stringDeConexao := "host=localhost user=postgres password=root dbname=desafio-fabricio port=5432 sslmode=disable"
-
 	DB, err = gorm.Open(postgres.Open(stringDeConexao))
 
 	if err != nil {

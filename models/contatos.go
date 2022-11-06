@@ -14,7 +14,7 @@ type Contato struct {
 	Bairro       string     `json:"bairro"`
 	UF           string     `json:"uf"`
 	Email        string     `json:"mail"`
-	Telefones    []Telefone `json:"telefones" gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+	Telefones    []Telefone `json:"telefones" gorm:"foreignKey:ContatoID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE"`
 	Recomendacao string     `json:"recomendacao" gorm:"-"`
 }
 

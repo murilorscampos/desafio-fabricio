@@ -5,6 +5,7 @@ import (
 	"github/murilorscampos/desafio-fabricio/models"
 	"github/murilorscampos/desafio-fabricio/utils"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -110,11 +111,10 @@ func AlteraContato(c *gin.Context) {
 // ApagaContato realiza a exclusao do contato e dos telefones associados
 func ApagaContato(c *gin.Context) {
 
-	contato := models.Contato{}
-
 	id := c.Params.ByName("id")
+	idConvertido, _ := strconv.Atoi(id)
 
-	if result := database.DB.Select("Telefones").Delete(&contato, id); result.Error != nil {
+	if result := database.DB.Select("Telefones").Delete(&models.Contato{ID: idConvertido}); result.Error != nil {
 
 		c.JSON(http.StatusBadRequest, gin.H{
 			"data": result.Error,
@@ -178,7 +178,7 @@ func ConsultaContatosNome(c *gin.Context) {
 
 	nomeSemAcento, _, _ := transform.String(t, nome)
 
-	if result := database.DB.Preload("Telefones").Where("lower(nome) LIKE ?", strings.ToLower(nomeSemAcento)+"%").Find(&contatos).Order("nome"); result.Error != nil {
+	if result := database.DB.Preload("Telefones").Where("lower(unaccent(nome)) LIKE ?", strings.ToLower(nomeSemAcento)+"%").Find(&contatos).Order("nome"); result.Error != nil {
 
 		c.JSON(http.StatusBadRequest, gin.H{
 			"data": result.Error,
@@ -328,5 +328,19 @@ func ConsultaContatosUF(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, contatosComRecomendacao)
+
+}
+
+func BuscaClienteID(clienteID int) ([]models.Contato, error) {
+
+	contatos := []models.Contato{}
+
+	if result := database.DB.Preload("Telefones").Find(&contatos, clienteID); result.Error != nil {
+
+		return contatos, result.Error
+
+	}
+
+	return contatos, nil
 
 }
